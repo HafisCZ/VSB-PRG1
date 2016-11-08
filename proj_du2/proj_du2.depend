@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1478600568 source:c:\users\mar21\desktop\gits\vsb-prg1\proj_du2\main.cpp
+	<iostream>
+	<string>
+	<vector>
+	<algorithm>
+

@@ -22,9 +22,6 @@ int main()
 }
 
 bool prime(int num) {
-    if (num > 3 && (num % 2 == 0 || num % 3 == 0)) return false;
-    else if (num > 7 && num % 7 == 0) return false;
-    else if (num > 5 && num % 5 == 0) return false;
     for (int i = 2; i <= sqrt(num); i++) if (num % i == 0) return false;
     return true;
 }
