@@ -12,7 +12,7 @@ int main()
     unsigned int iter = 0;
     std::string word[3], str;
 
-    std::cout << "Zadejte tri slova" << std::endl;
+    std::cout << "Zadejte 3 slova:" << std::endl;
     std::getline(std::cin, str);
     for (unsigned int i = 0; i < str.length(); i++) {
         if (isspace(str[i])) {
@@ -25,7 +25,7 @@ int main()
     }
 
     if (std::cin.fail() || iter != 2) {
-        std::cout << "Nespravny vstup" << std::endl;
+        std::cout << "Nespravny vstup." << std::endl;
         return 0;
     }
 
@@ -37,7 +37,7 @@ int main()
     std::cout << "Slovo2 a slovo3 " << (word[1] == word[2] ? "jsou" : "nejsou") << " stejna." << std::endl;
 
     for (unsigned int i = 0; i < 3; i++) {
-        std::cout << "Pocet znaku ve slovo" << i << " je: " << word[i].size() << std::endl;
+        std::cout << "Pocet znaku ve slovo" << i + 1 << " je: " << word[i].size() << std::endl;
     }
 
 
