@@ -4,31 +4,31 @@
 
 // (c) 2016 MARTIN HAFIS HALFAR @ HIRAISHIN SOFTWARE
 
-template<typename T> bool readBoolVector(std::vector<T>& vect1, std::vector<T>& vect2, std::istream& stream);
-template<typename T> void combineBinaryVector(const std::vector<T>& vect1, const std::vector<T>& vect2, std::vector<T>& out);
-template<typename T> void printReversedVector(const std::vector<T>& vect, std::ostream& stream, bool ignoreZero);
+bool readBoolVector(std::vector<bool>& vect1, std::vector<bool>& vect2, std::istream& stream);
+void combineBinaryVector(const std::vector<bool>& vect1, const std::vector<bool>& vect2, std::vector<bool>& out);
+void printReversedVector(const std::vector<bool>& vect, std::ostream& stream, bool ignoreZero);
 
 int main() {
     std::vector<bool> set1, set2, set3;
     std::cout << "Zadejte dve binarni cisla:" << std::endl;
 
-    if (!readBoolVector<bool>(set1, set2, std::cin) || std::cin.fail() || set1.size() < 1 || set2.size() < 1) {
+    if (!readBoolVector(set1, set2, std::cin) || std::cin.fail() || set1.size() < 1 || set2.size() < 1) {
         std::cout << "Nespravny vstup." << std::endl;
         return 0;
     }
 
     reverse(set1.begin(), set1.end());
     reverse(set2.begin(), set2.end());
-    combineBinaryVector<bool>(set1, set2, set3);
+    combineBinaryVector(set1, set2, set3);
 
     std::cout << "Soucet: ";
-    printReversedVector<bool>(set3, std::cout, true);
+    printReversedVector(set3, std::cout, true);
     std::cout << std::endl;
 
     return 0;
 }
 
-template<typename T> bool readBoolVector(std::vector<T>& vect1, std::vector<T>& vect2, std::istream& stream) {
+bool readBoolVector(std::vector<bool>& vect1, std::vector<bool>& vect2, std::istream& stream) {
     bool input_flag = false;
     char temp = stream.get();
 
@@ -46,7 +46,7 @@ template<typename T> bool readBoolVector(std::vector<T>& vect1, std::vector<T>& 
     return true;
 }
 
-template<typename T> void printReversedVector(const std::vector<T>& vect, std::ostream& stream, bool ignoreZero) {
+void printReversedVector(const std::vector<bool>& vect, std::ostream& stream, bool ignoreZero) {
     for (int i = vect.size() - 1; i >= 0; --i) {
         if (!vect.at(i) && ignoreZero) {
             if (vect.size() == 1 || (!vect.at(0) && i == 0)) {
@@ -61,7 +61,7 @@ template<typename T> void printReversedVector(const std::vector<T>& vect, std::o
     }
 }
 
-template<typename T> void combineBinaryVector(const std::vector<T>& vect1, const std::vector<T>& vect2, std::vector<T>& out) {
+void combineBinaryVector(const std::vector<bool>& vect1, const std::vector<bool>& vect2, std::vector<bool>& out) {
     unsigned int i = 0;
     bool a, b, c = false, r = false;
 
