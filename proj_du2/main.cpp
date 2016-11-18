@@ -5,6 +5,7 @@
 // (c) 2016 MARTIN HAFIS HALFAR @ HIRAISHIN SOFTWARE
 
 bool readBoolVector(std::vector<bool>& vect1, std::vector<bool>& vect2, std::istream& stream);
+void extendCombinaBinaryVector(std::vector<bool>& vect1, std::vector<bool>& vect2, std::vector<bool>& out);
 void combineBinaryVector(const std::vector<bool>& vect1, const std::vector<bool>& vect2, std::vector<bool>& out);
 void printReversedVector(const std::vector<bool>& vect, std::ostream& stream, bool ignoreZero);
 
@@ -17,9 +18,7 @@ int main() {
         return 0;
     }
 
-    reverse(set1.begin(), set1.end());
-    reverse(set2.begin(), set2.end());
-    combineBinaryVector(set1, set2, set3);
+    extendCombinaBinaryVector(set1, set2, set3);
 
     std::cout << "Soucet: ";
     printReversedVector(set3, std::cout, true);
@@ -36,7 +35,7 @@ bool readBoolVector(std::vector<bool>& vect1, std::vector<bool>& vect2, std::ist
         if (isspace(temp) && temp != '\n' && !input_flag) {
             input_flag = true;
         } else if (temp == '0' || temp == '1') {
-            (input_flag ? vect2 : vect1).push_back(temp == '0' ? false : true);
+            (input_flag ? vect2 : vect1).insert((input_flag ? vect2 : vect1).begin(), temp == '0' ? false : true);
         } else {
             return false;
         }
@@ -61,25 +60,32 @@ void printReversedVector(const std::vector<bool>& vect, std::ostream& stream, bo
     }
 }
 
+void extendCombinaBinaryVector(std::vector<bool>& vect1, std::vector<bool>& vect2, std::vector<bool>& out) {
+    bool a, b, c = false;
+
+    if (vect1.size() != vect2.size()) {
+        (vect1.size() > vect2.size() ? vect2 : vect1).resize((vect1.size() > vect2.size() ? vect1 : vect2).size(), false);
+    }
+
+    for (unsigned int i = 0; i < vect1.size(); i++) {
+        a = vect1.at(i);
+        b = vect2.at(i);
+        out.push_back((a ^ b) ^ c);
+        c = ((a & b) | (a & c) | (b & c));
+    }
+
+    if (c) out.push_back(c);
+}
+
 void combineBinaryVector(const std::vector<bool>& vect1, const std::vector<bool>& vect2, std::vector<bool>& out) {
-    unsigned int i = 0;
+    unsigned int i = 0, vect1_size = vect1.size(), vect2_size = vect2.size();
     bool a, b, c = false, r = false;
 
-    while (i < vect1.size() || i < vect2.size()) {
-        if (i < vect1.size() && i < vect2.size()) {
-            a = vect1.at(i);
-            b = vect2.at(i);
-            r = ((a ^ b) ^ c);
-            c = ((a & c) | (a & b) | (b & c));
-        } else if (i < vect1.size()) {
-            a = vect1.at(i);
-            r = (a ^ c);
-            c = (a & c);
-        } else if (i < vect2.size()){
-            b = vect2.at(i);
-            r = (b ^ c);
-            c = (b & c);
-        }
+    while (i < vect1_size || i < vect2_size) {
+        if (i < vect1_size) a = vect1.at(i);
+        if (i < vect2_size) b = vect2.at(i);
+        r = (i < vect1_size && i < vect2_size ? a ^ b : (vect1_size < vect2_size ? b : a)) ^ c;
+        c = (i < vect1_size && i < vect2_size ? ((a & b) | (b & c) | (a & c)) : (vect1_size < vect2_size ? (b & c) : (a & c)));
         out.push_back(r);
         ++i;
     }
