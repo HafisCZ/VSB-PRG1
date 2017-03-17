@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <stddef.h>
 #include "Node.h"
 
 template <class T> class InstantQueue {
@@ -12,7 +12,7 @@ template <class T> class InstantQueue {
 			this->oldest = NULL;
 		}
 		void operator()(const T& value) {
-			Node<T> *child = new Node<T>(NULL, value);
+			Node<T> *child = new Node<T>(value);
 			if (this->oldest == NULL || this->youngest == NULL) {
 				this->youngest = child;
 				this->oldest = this->youngest;
