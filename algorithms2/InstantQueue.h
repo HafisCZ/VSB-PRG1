@@ -5,43 +5,43 @@
 
 template <class T> class InstantQueue {
 	private:
-		Node<T> *youngest, *oldest;
+		Node<T> *youngest_, *oldest_;
 	public:
 		InstantQueue() {
-			this->youngest = NULL;
-			this->oldest = NULL;
+			this->youngest_ = NULL;
+			this->oldest_ = NULL;
 		}
 		void operator()(const T& value) {
 			Node<T> *child = new Node<T>(value);
-			if (this->oldest == NULL || this->youngest == NULL) {
-				this->youngest = child;
-				this->oldest = this->youngest;
+			if (this->oldest_ == NULL || this->youngest_ == NULL) {
+				this->youngest_ = child;
+				this->oldest_ = this->youngest_;
 			} else {
-				this->youngest->setChild(child);
-				this->youngest = child;
+				this->youngest_->setSubordinate(child);
+				this->youngest_ = child;
 			}
 		}
 		T operator~() {
-			Node<T> *newer = this->oldest->getChild();
-			T currentValue = this->oldest->getValue();
-			delete this->oldest;
-			this->oldest = newer;
+			Node<T> *newer = this->oldest_->getSubordinate();
+			T currentValue = this->oldest_->getValue();
+			delete this->oldest_;
+			this->oldest_ = newer;
 			return currentValue;
 		}
 		T peek() const {
-			if (this->oldest == NULL) return NULL;
-			else return this->oldest->getValue();
+			if (this->oldest_ == NULL) return NULL;
+			else return this->oldest_->getValue();
 		}
 		T top() const {
-			if (this->youngest == NULL) return NULL;
-			else return this->youngest->getValue();
+			if (this->youngest_ == NULL) return NULL;
+			else return this->youngest_->getValue();
 		}
  		bool hasContent() {
-			return (this->oldest != NULL);
+			return (this->oldest_ != NULL);
 		}
 		void destroy() {
-			if (this->oldest != NULL) {
-				this->oldest->destroy();
+			if (this->oldest_ != NULL) {
+				this->oldest_->destroy();
 			}
 		}
 };

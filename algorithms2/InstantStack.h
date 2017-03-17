@@ -5,36 +5,36 @@
 
 template <class T> class InstantStack {
 	private:
-		Node<T> *head;
+		Node<T> *head_;
 	public:
 		InstantStack() {
-			this->head = NULL;
+			this->head_ = NULL;
 		}
 		void operator()(const T& value) {
 			Node<T> *child = new Node<T>(value);
-			if (this->head == NULL) {
-				this->head = child;
+			if (this->head_ == NULL) {
+				this->head_ = child;
 			} else {
-				child->setChild(this->head);
-				this->head = child;
+				child->setSubordinate(this->head_);
+				this->head_ = child;
 			}
 		}
 		T operator~() {
-			Node<T>* older = this->head->getChild();
-			T currentValue = this->head->getValue();
-			delete this->head;
-			this->head = older;
+			Node<T>* older = this->head_->getSubordinate();
+			T currentValue = this->head_->getValue();
+			delete this->head_;
+			this->head_ = older;
 			return currentValue;
 		}
 		T peek() {
-			return this->head->getValue();
+			return this->head_->getValue();
 		}
 		bool hasContent() {
-			return (this->head != NULL);
+			return (this->head_ != NULL);
 		}
 		void destroy() {
-			if (this->head != NULL) {
-				this->head->destroy();
+			if (this->head_ != NULL) {
+				this->head_->destroy();
 			}
 		}
 };

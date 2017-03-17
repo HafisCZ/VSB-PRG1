@@ -43,7 +43,7 @@ int main() {
 	}
 	r.destroy();
 	
-	std::cout << std::endl << std::endl << "Binary Tree: " << std::endl;
+	std::cout << std::endl << std::endl << "Binary Tree (First value is 5): " << std::endl;
 	BinaryTree<int> binaryTree(5);
 	for (int i = 1; i < 11; i++) {
 		if (i == 5) continue;

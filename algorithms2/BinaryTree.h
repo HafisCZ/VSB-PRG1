@@ -6,13 +6,13 @@
 
 template <class T> class BinaryTree {
 	private:
-		BinaryNode<T> *head;
+		BinaryNode<T> *head_;
 	public:
 		BinaryTree(const T& value) {
-			this->head = new BinaryNode<T>(value);
+			this->head_ = new BinaryNode<T>(value);
 		}
 		void add(const T& value) {
-			BinaryNode<T> *selected = this->head, *left = NULL, *right = NULL;
+			BinaryNode<T> *selected = this->head_, *left = NULL, *right = NULL;
 			do {
 				left = selected->getLeft();
 				right = selected->getRight();
@@ -32,7 +32,7 @@ template <class T> class BinaryTree {
 		void process(void (*f)(T)) {
 			InstantStack<BinaryNode<T>*> buffer;
 			BinaryNode<T> *current = NULL;
-			buffer(this->head);
+			buffer(this->head_);
 			while (buffer.hasContent()) {
 				current = ~buffer;
 				(*f)(current->getValue());
@@ -42,6 +42,6 @@ template <class T> class BinaryTree {
 			buffer.destroy();
 		}
 		void printHyearchy(std::ostream& o) {
-			this->head->printHyearchy(o, ' ');
+			this->head_->printHyearchy(o, ' ');
 		}
 };
