@@ -6,50 +6,63 @@
 #include "BinaryTree.h"
 
 int main() {
-	Node<int> *headNode = new Node<int>(NULL, 0);
-	for (int i = 1; i < 5; i++) {
-		Node<int>* secondaryNode = new Node<int>(i, headNode, true);
-		for (int j = 1; j < 3; j++) new Node<int>(i * 10 + j, secondaryNode, true);
+	std::cout << "__ Node Tree __" << std::endl << "INS: A";
+	Node<char> *headNode = new Node<char>('A');
+	for (int i = 0; i < 5; i++) {
+		std::cout << " " << (char)(i * 3 + 'B');
+		Node<char>* secondaryNode = new Node<char>(i * 3 + 'B', headNode, true);
+		for (int j = 0; j < 2; j++) {
+			std::cout << " " << (char)(i * 3 + j + 'C');
+			new Node<char>(i * 3 + j + 'C', secondaryNode, true);
+		}
 	}
-	NodeTree<int> f(headNode);
+	NodeTree<char> f(headNode);
 
-	std::cout << "Depth First Search:" << std::endl;
-
+	std::cout << std::endl << "DFS:";
 	f.DepthFirstSearch();
-	std::cout << std::endl << std::endl << "Breadth First Search:" << std::endl;
 
+	std::cout << std::endl << "BFS:";
 	f.BreadthFirstSearch();
-	std::cout << std::endl << std::endl << "Instant Stack Release Pattern:" << std::endl;
 
 	f.destroy();
+
+	std::cout << std::endl << std::endl << "__ Instant Stack __" << std::endl;
+	std::cout << "I Pattern: A B C D E F G H I J" << std::endl;
+	std::cout << "O Pattern:";
 	
-	InstantStack<int> q;
-	for (int i = 1; i < 11; i++) {
-		q(i);
+	InstantStack<char> q;
+	for (int i = 0; i < 10; i++) {
+		q(i + 'A');
 	}
 	for (int i = 0; i < 10; i++) {
 		std::cout << " " << ~q;
 	}
 	q.destroy();
 
-	std::cout << std::endl << std::endl << "Instant Queue Release Pattern:" << std::endl;
+	std::cout << std::endl << std::endl << "__ Instant Queue __" << std::endl;
+	std::cout << "I Pattern: A B C D E F G H I J" << std::endl;
+	std::cout << "O Pattern:";
 
-	InstantQueue<int> r;
-	for (int i = 1; i < 11; i++) {
-		r(i);
+	InstantQueue<char> r;
+	for (int i = 0; i < 10; i++) {
+		r(i + 'A');
 	}
 	for (int i = 0; i < 10; i++) {
 		std::cout << " " << ~r;
 	}
 	r.destroy();
 	
-	std::cout << std::endl << std::endl << "Binary Tree (First value is 5): " << std::endl;
-	BinaryTree<int> binaryTree(5);
-	for (int i = 1; i < 11; i++) {
-		if (i == 5) continue;
-		binaryTree.add(i);
-	}
-	binaryTree.printHyearchy(std::cout);
+	std::cout << std::endl << std::endl << "__ Binary Tree __" << std::endl;
+	char input;
+	BinaryTree<char> bin;
+	do {
+		std::cout << "Content:";
+		bin.printHyearchy(std::cout);
+		std::cout << "\nAdd number: ";
+		std::cin >> input;
+		if (input < 'A' || input > 'Z') break;
+		bin.add(input);
+	} while (true);
 	
 	std::cin.get();
 	return 0;

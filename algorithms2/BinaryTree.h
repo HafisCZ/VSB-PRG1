@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 #include "Node.h"
 #include "InstantStack.h"
 
@@ -8,26 +8,22 @@ template <class T> class BinaryTree {
 	private:
 		BinaryNode<T> *head_;
 	public:
-		BinaryTree(const T& value) {
-			this->head_ = new BinaryNode<T>(value);
+		BinaryTree() {
+			this->head_ = NULL;
+		}
+		~BinaryTree() {
+			if (this->head_ != NULL) this->head_->destroy();
 		}
 		void add(const T& value) {
-			BinaryNode<T> *selected = this->head_, *left = NULL, *right = NULL;
-			do {
-				left = selected->getLeft();
-				right = selected->getRight();
-				if (selected->getValue() >= value) {
-					if (left == NULL) {
-						selected->setLeft(value);
-						selected = NULL;
-					} else selected = left;
-				} else {
-					if (right == NULL) {
-						selected->setRight(value);
-						selected = NULL;
-					} else selected = right;
+			if (this->head_ == NULL) this->head_ = new BinaryNode<T>(value);
+			else {
+				BinaryNode<T> *selected = this->head_, *target = NULL;
+				while (selected != NULL) {
+					target = (selected->getValue() >= value ? selected->getLeft() : selected->getRight());
+					if (target == NULL) selected->setSide(value, selected->getValue() < value);
+					selected = (target == NULL ? NULL : target);
 				}
-			} while (selected != NULL);
+			}
 		}
 		void process(void (*f)(T)) {
 			InstantStack<BinaryNode<T>*> buffer;
@@ -42,6 +38,6 @@ template <class T> class BinaryTree {
 			buffer.destroy();
 		}
 		void printHyearchy(std::ostream& o) {
-			this->head_->printHyearchy(o, ' ');
+			if (this->head_ != NULL) this->head_->printHyearchy(o, ' ');
 		}
 };

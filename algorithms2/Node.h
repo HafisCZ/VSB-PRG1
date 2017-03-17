@@ -1,14 +1,14 @@
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 #include <ostream>
 
 template <class C> class Node {
 	private:
 		Node<C> **subordinate_, *superior_;
 		C value_;
-		bool set_;
 		int subordinate_count_;
+		bool set_;
 	public:
 		Node(const C& value, Node<C> *superior = NULL, bool update_superior = false) {
 			this->subordinate_ = NULL;
@@ -89,7 +89,7 @@ template <class C> class Node {
 
 template <class C> class BinaryNode {
 	private:
-		BinaryNode<C> *left_, *right;
+		BinaryNode<C> *left_, *right_;
 		bool set_;
 		C value_;
 	public:
@@ -97,13 +97,13 @@ template <class C> class BinaryNode {
 			this->value_ = value;
 			this->set_ = true;
 			this->left_ = NULL;
-			this->right = NULL;
+			this->right_ = NULL;
 		}
 		inline BinaryNode<C>* getLeft() {
 			return this->left_;
 		}
 		inline BinaryNode<C>* getRight() {
-			return this->right;
+			return this->right_;
 		}
 		inline C getValue() {
 			return this->value_;
@@ -112,7 +112,7 @@ template <class C> class BinaryNode {
 			return (this->left_ != NULL);
 		}
 		inline bool hasRight() {
-			return (this->right != NULL);
+			return (this->right_ != NULL);
 		}
 		inline bool isSet() {
 			return (this->set_);
@@ -124,17 +124,28 @@ template <class C> class BinaryNode {
 			this->left_ = new BinaryNode<C>(value);
 		}
 		void setRight(BinaryNode<C> *right) {
-			this->right = right;
+			this->right_ = right;
 		}
 		void setRight(const C& value) {
-			this->right = new BinaryNode<C>(value);
+			this->right_ = new BinaryNode<C>(value);
+		}
+		void setSide(BinaryNode<C> *node, bool side) {
+			(side ? this->right_ : this->left_) = node;
+		}
+		void setSide(const C& value, bool side) { 
+			(side ? this->right_ : this->left_) = new BinaryNode<C>(value);
 		}
 		void process(void(*f)(C)) {
 			(*f)(C);
 		}
 		void printHyearchy(std::ostream& o, char delim) {
-			if (hasLeft()) this->getLeft()->printHyearchy(o, delim);
+			if (this->left_ != NULL) this->left_->printHyearchy(o, delim);
 			o << delim << this->value_;
-			if (hasRight()) this->getRight()->printHyearchy(o, delim);
+			if (this->right_ != NULL) this->right_->printHyearchy(o, delim);
+		}
+		void destroy() {
+			if (this->left_ != NULL) this->left_->destroy();
+			if (this->right_ != NULL) this->right_->destroy();
+			delete this;
 		}
 };
