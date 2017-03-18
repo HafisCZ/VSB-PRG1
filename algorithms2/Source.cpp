@@ -58,7 +58,7 @@ int main() {
 	do {
 		std::cout << "Content:";
 		bin.printHyearchy(std::cout);
-		std::cout << "\nAdd number: ";
+		std::cout << "\nAdd capital letter: ";
 		std::cin >> input;
 		if (input < 'A' || input > 'Z') break;
 		bin.add(input);

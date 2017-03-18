@@ -18,16 +18,16 @@ template <class C> class Node {
 			this->value_ = value;
 			this->set_ = true;
 		}
-		inline Node** getSubordinates() {
+		inline Node<C>** getSubordinates() {
 			return this->subordinate_;
 		}
-		inline Node* getSuperior() {
+		inline Node<C>* getSuperior() {
 			return this->superior_;
 		}
-		inline Node* getSubordinate() {
+		inline Node<C>* getSubordinate() {
 			return (this->subordinate_count_ > 0 ? this->subordinate_[0] : NULL);
 		}
-		inline Node* getSubordinateAt(int index) {
+		inline Node<C>* getSubordinateAt(int index) {
 			return (index >= 0 && index < this->subordinate_count_ ? this->subordinate_[index] : NULL);
 		}
 		inline C getValue() {
