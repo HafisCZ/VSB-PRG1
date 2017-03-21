@@ -7,27 +7,26 @@
 
 template <class T> class NodeTree {
 	private:
-		Node<T> *head_;
+		GenericNode<T> *head_;
 	public:
-		NodeTree(Node<T>* node) {
+		NodeTree(GenericNode<T>* node) {
 			this->head_ = node;
 		}
 		void BreadthFirstSearch() {
-			InstantQueue<Node<T>*> buffer;
-			Node<T> *current = NULL;
+			InstantQueue<GenericNode<T>*> buffer;
+			GenericNode<T> *current = NULL;
 			buffer(this->head_);
 			while (buffer.hasContent()) {
 				current = ~buffer;
 				std::cout << " " << current->getValue();
-				for (int i = 0; i < current->nSubordinates(); i++) {
-					buffer(current->getSubordinateAt(i));
+				for (unsigned int i = 0; i < current->nSubordinates(); i++) {
+					buffer(current->getSubordinate(i));
 				}
 			}
-			buffer.destroy();
 		}
-		Node<T>* BreadthFirstSearch(const T& searchValue) {
-			InstantQueue<Node<T>*> buffer;
-			Node<T> *current = NULL;
+		GenericNode<T>* BreadthFirstSearch(const T& searchValue) {
+			InstantQueue<GenericNode<T>*> buffer;
+			GenericNode<T> *current = NULL;
 			buffer(this->head_);
 			while (buffer.hasContent()) {
 				iterations++;
@@ -40,24 +39,22 @@ template <class T> class NodeTree {
 					buffer(current->getChild(i));
 				}
 			}
-			buffer.destroy();
 		}
 		void DepthFirstSearch() {
-			InstantStack<Node<T>*> buffer;
-			Node<T> *current = NULL;
+			InstantStack<GenericNode<T>*> buffer;
+			GenericNode<T> *current = NULL;
 			buffer(this->head_);
 			while (buffer.hasContent()) {
 				current = ~buffer;
 				std::cout << " " << current->getValue();
-				for (int i = 0; i < current->nSubordinates(); i++) {
-					buffer(current->getSubordinateAt(i));
+				for (unsigned int i = 0; i < current->nSubordinates(); i++) {
+					buffer(current->getSubordinate(i));
 				}
 			}
-			buffer.destroy();
 		}
-		Node<T>* DepthFirstSearch(const T& searchValue) {
-			InstantStack<Node<T>*> buffer;
-			Node<T> *current = NULL;
+		GenericNode<T>* DepthFirstSearch(const T& searchValue) {
+			InstantStack<GenericNode<T>*> buffer;
+			GenericNode<T> *current = NULL;
 			buffer(this->head_);
 			while (buffer.hasContent()) {
 				current = ~buffer;
@@ -69,11 +66,10 @@ template <class T> class NodeTree {
 					buffer(current->getChild(i));
 				}
 			}
-			buffer.destroy();
 		}
 		void destroy() {
 			if (this->head_ != NULL) {
-				this->head_->destroy();
+				this->head_->remove(true);
 			}
 		}
 };

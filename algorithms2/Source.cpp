@@ -1,4 +1,5 @@
 #include <iostream>
+#include "vld.h"
 #include "Node.h"
 #include "NodeTree.h"
 #include "InstantStack.h"
@@ -7,13 +8,13 @@
 
 int main() {
 	std::cout << "__ Node Tree __" << std::endl << "INS: A";
-	Node<char> *headNode = new Node<char>('A');
+	GenericNode<char> *headNode = new GenericNode<char>('A');
 	for (int i = 0; i < 5; i++) {
 		std::cout << " " << (char)(i * 3 + 'B');
-		Node<char>* secondaryNode = new Node<char>(i * 3 + 'B', headNode, true);
+		GenericNode<char>* secondaryNode = new GenericNode<char>(i * 3 + 'B', headNode, true);
 		for (int j = 0; j < 2; j++) {
 			std::cout << " " << (char)(i * 3 + j + 'C');
-			new Node<char>(i * 3 + j + 'C', secondaryNode, true);
+			new GenericNode<char>(i * 3 + j + 'C', secondaryNode, true);
 		}
 	}
 	NodeTree<char> f(headNode);
@@ -25,7 +26,7 @@ int main() {
 	f.BreadthFirstSearch();
 
 	f.destroy();
-
+	
 	std::cout << std::endl << std::endl << "__ Instant Stack __" << std::endl;
 	std::cout << "I Pattern: A B C D E F G H I J" << std::endl;
 	std::cout << "O Pattern:";
@@ -34,15 +35,12 @@ int main() {
 	for (int i = 0; i < 10; i++) {
 		q(i + 'A');
 	}
-	for (int i = 0; i < 10; i++) {
-		std::cout << " " << ~q;
-	}
-	q.destroy();
+	while (q.hasContent()) std::cout << " " << ~q;
 
 	std::cout << std::endl << std::endl << "__ Instant Queue __" << std::endl;
 	std::cout << "I Pattern: A B C D E F G H I J" << std::endl;
 	std::cout << "O Pattern:";
-
+	
 	InstantQueue<char> r;
 	for (int i = 0; i < 10; i++) {
 		r(i + 'A');
@@ -50,7 +48,6 @@ int main() {
 	for (int i = 0; i < 10; i++) {
 		std::cout << " " << ~r;
 	}
-	r.destroy();
 	
 	std::cout << std::endl << std::endl << "__ Binary Tree __" << std::endl;
 	char input;
@@ -63,6 +60,7 @@ int main() {
 		if (input < 'A' || input > 'Z') break;
 		bin.add(input);
 	} while (true);
+	
 	
 	std::cin.get();
 	return 0;
