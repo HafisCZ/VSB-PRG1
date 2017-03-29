@@ -6,9 +6,14 @@
 
 int main() {
 	List<int> list;
-	list.insert(5, 0);
-	std::cout << list.get(0);
-	
+	for (unsigned int i = 0; i < 10; i++) {
+		list.push_back(i + 1);
+	}
+
+	for (unsigned int i = 0; i < list.size(); i++) {
+		std::cout << list.get(i);
+	}
+
 	
 	/*
 	/// QUEUE & STACK
