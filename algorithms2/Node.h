@@ -2,15 +2,19 @@
 
 #include <cstddef>
 
-template <class C> class GenericNode {
+enum UpdateMode {
+	IGNORE, APPEND, OVERRIDE
+};
+
+template <class C> class Node {
 	protected:
-		GenericNode<C> **subordinates_, *superior_;
+		Node<C> **subordinates_, *superior_;
 		unsigned int subordinate_count_;
 		C value_;
 
-		void expand(unsigned int count) {
+		void _expand(unsigned int count) {
 			if (count > this->subordinate_count_) {
-				GenericNode<C> **temporary = new GenericNode<C>*[count];
+				Node<C> **temporary = new Node<C>*[count];
 				for (unsigned int i = 0; i < this->subordinate_count_; i++) temporary[i] = this->subordinates_[i];
 				for (unsigned int i = this->subordinate_count_; i < count; i++) temporary[i] = NULL;
 				delete[] this->subordinates_;
@@ -19,16 +23,24 @@ template <class C> class GenericNode {
 			}
 		}
 	public:
-		GenericNode(const C& value, GenericNode<C> *superior = NULL, bool force_update = false) : value_(value) {
+		explicit Node(const C& value, Node<C> *superior = NULL, UpdateMode force_update = UpdateMode::IGNORE) : value_(value) {
 			this->subordinates_ = NULL;
 			this->subordinate_count_ = 0;
 			this->superior_ = superior;
-			if (this->superior_ != NULL && force_update) {
-				this->superior_->pushSubordinate(this);
+			if (this->superior_ != NULL) {
+				if (force_update == UpdateMode::APPEND) {
+					this->superior_->pushSubordinate(this);
+				} else if (force_update == UpdateMode::OVERRIDE) {
+					this->superior_->setSubordinate(this, 0);
+				}
 			}
 		}
 
-		inline C getValue() const {
+		virtual ~Node() {
+
+		}
+		
+		inline const C& getValue() const {
 			return this->value_;
 		}
 
@@ -36,45 +48,44 @@ template <class C> class GenericNode {
 			this->value_ = value;
 		}
 
-		inline GenericNode<C>* getSuperior() const {
+		inline Node<C>* getSuperior() const {
 			return this->superior_;
-		}
-
-		inline GenericNode<C>** getSubordinates() const {
-			return this->subordinates_;
 		}
 
 		inline unsigned int nSubordinates() const {
 			return this->subordinate_count_;
 		}
 
-		inline void setSubordinates(GenericNode<C> **child, unsigned int count) {
-			this->subordinates_ = child;
-			this->subordinate_count_ = (child == NULL ? 0 : count);
+		void expand(unsigned int count) {
+			_expand(count);
 		}
 
-		inline GenericNode<C>* getSubordinate(unsigned int index = 0) const {
+		inline Node<C>* getSubordinate(unsigned int index = 0) const {
 			return (index < this->subordinate_count_ ? this->subordinates_[index] : NULL);
 		}
-
-		void setSubordinate(GenericNode<C> *child, unsigned int position = 0, bool ignore_null = false) {
+		
+		void setSubordinate(Node<C> *child, unsigned int position = 0, bool ignore_null = false) {
 			if (child != NULL || ignore_null) {
 				if (position >= this->subordinate_count_) {
-					expand(position + 1);
+					_expand(position + 1);
 				}
 				this->subordinates_[position] = child;
 			}
 		}
 
-		void pushSubordinate(GenericNode<C> *child) {
-			expand(this->subordinate_count_ + 1);
-			this->subordinates_[this->subordinate_count_ - 1] = child;
+		void pushSubordinate(Node<C> *child, bool ignore_null = false) {
+			if (child != NULL || ignore_null) {
+				_expand(this->subordinate_count_ + 1);
+				this->subordinates_[this->subordinate_count_ - 1] = child;
+			}
 		}
 
-		void remove(bool cascading = false) {
+		virtual void remove(bool cascading = false) {
 			if (this->subordinate_count_ > 0) {
 				for (unsigned int i = 0; i < this->subordinate_count_ && cascading; i++) {
-					this->subordinates_[i]->remove(true);
+					if (this->subordinates_[i] != NULL) {
+						this->subordinates_[i]->remove(true);
+					}
 				}
 				delete[] this->subordinates_;
 			}
