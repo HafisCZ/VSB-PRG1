@@ -37,6 +37,13 @@ template <class C> class Node {
 				this->subordinates_size_ = size;
 			}
 		}
+
+		/**
+			Increases subordinate array by one.
+		*/
+		void _expand() {
+			_expand(this->subordinates_size_ + 1);
+		}
 	public:
 		/**
 			Explicit constructor.
@@ -105,7 +112,7 @@ template <class C> class Node {
 			@param index Position of subordinate in array.
 			@return Selected subordinate.
 		*/
-		inline Node<C>* getSubordinate(unsigned int index = 0) const {
+		Node<C>* getSubordinate(unsigned int index = 0) const {
 			return (index < this->subordinates_size_ ? this->subordinates_[index] : NULL);
 		}
 
@@ -119,9 +126,7 @@ template <class C> class Node {
 		*/
 		void setSubordinate(Node<C> *subordinate, unsigned int position = 0, bool ignore_null = false) {
 			if (subordinate != NULL || ignore_null) {
-				if (position >= this->subordinates_size_) {
-					_expand(this->subordinates_size_ + 1);
-				}
+				if (position >= this->subordinates_size_) _expand();
 				this->subordinates_[position] = subordinate;
 			}
 		}
@@ -135,8 +140,26 @@ template <class C> class Node {
 		*/
 		void pushSubordinate(Node<C> *subordinate, bool ignore_null = false) {
 			if (subordinate != NULL || ignore_null) {
-				_expand(this->subordinates_size_ + 1);
+				_expand();
 				this->subordinates_[this->subordinates_size_ - 1] = subordinate;
+			}
+		}
+
+		/**
+			Remove all subordinates.
+
+			@param delete_subordinates Use true if you want to delete all subordinates. 
+		*/
+		void clear(bool delete_subordinates = false) {
+			if (this->subordinates_size_ > 0) {
+				for (unsigned int i = 0; i < this->subordinates_size_ && delete_subordinates; i++) {
+					if (this->subordinates_[i] != NULL) {
+						this->subordinates_[i]->remove(true);
+					}
+				}
+				delete[] this->subordinates_;
+				this->subordinates_ = NULL;
+				this->subordinates_size_ = 0;
 			}
 		}
 
@@ -146,14 +169,7 @@ template <class C> class Node {
 			@param cascading Use true to remove all subordinates aswell (this function will be called as recursive on all subordinates).
 		*/
 		virtual void remove(bool cascading = false) {
-			if (this->subordinates_size_ > 0) {
-				for (unsigned int i = 0; i < this->subordinates_size_ && cascading; i++) {
-					if (this->subordinates_[i] != NULL) {
-						this->subordinates_[i]->remove(true);
-					}
-				}
-				delete[] this->subordinates_;
-			}
+			clear(cascading);
 			delete this;
 		}
 };

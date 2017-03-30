@@ -42,10 +42,24 @@ template <class C> class StructureBase {
 		}
 
 		/**
+			@param value Value to be inserted.
+		*/
+		void operator<<(const C& value) {
+			this->add(value);
+		}
+
+		/**
 			@deprecated Use only overriden remove function from derived classes.
 		*/
 		virtual const C remove() {
 			return NULL;
+		}
+
+		/**
+			@param variable Variable where removed value will be stored
+		*/
+		void operator>>(C& variable) {
+			variable = remove();
 		}
 };
 
